@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,8 +12,7 @@ public class Main {
     'append' - writes weather data to a file -- appends data to the file if it exists
     'quit' - ends the program
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args){
         ArrayList<WeatherData> weatherData = null;
         while (true)
         {
@@ -88,10 +88,17 @@ public class Main {
     If the file does not exist, the function catches the exception, prints a message
     to the console, and return an empty (not null) array.
      */
-    public static ArrayList<WeatherData> ReadFile(String path)
-    {
-        // remove the line below and implement your function here
-        throw new UnsupportedOperationException();
+    public static ArrayList<WeatherData> ReadFile(String path){
+        File readFile = new File(path);
+        System.out.println("Reading file from '" + readFile.getAbsolutePath() + "'.");
+        ArrayList<WeatherData> files = new ArrayList<WeatherData>();
+        try {
+            Scanner scn = new Scanner (readFile);
+        } catch (FileNotFoundException e) {
+            System.out.println("File does not exist");
+            return files;
+        }
+        return files;
     }
 
     /*
@@ -104,8 +111,11 @@ public class Main {
      */
     public static void PrintWeatherData(ArrayList<WeatherData> weatherData)
     {
-        // remove the line below and implement your function here
-        throw new UnsupportedOperationException();
+        for(int i = 0; i < weatherData.size(); i++) {
+            System.out.print(weatherData.get(i).getCity() + ", ");
+            System.out.print(weatherData.get(i).getAverageTemp() + ", ");
+            System.out.println(weatherData.get(i).getAverageHumidity());
+        }
     }
 
     /*
@@ -113,8 +123,15 @@ public class Main {
      */
     public static void SortWeatherData(ArrayList<WeatherData> weatherData)
     {
-        // remove the line below and implement your function here
-        throw new UnsupportedOperationException();
+        for(int i = weatherData.size()-1; i >= 0; i--){
+            for(int hotterThan = 0; hotterThan <= weatherData.size(); hotterThan++) {
+                double avgTemp = weatherData.get(i).getAverageTemp();
+                if (avgTemp >= weatherData.get(hotterThan).getAverageTemp()) {
+                    weatherData.add(hotterThan, weatherData.get(i));
+                    weatherData.remove(i+1);
+                }
+            }
+        }
     }
 
     /*
@@ -125,9 +142,18 @@ public class Main {
     If the file cannot be created, the function catches the exception, prints a message
     to the console, and does not try to write to the file.
      */
-    public static void WriteFile(String path, boolean shouldAppend, ArrayList<WeatherData> weatherData)
-    {
-        // remove the line below and implement your function here
-        throw new UnsupportedOperationException();
+    public static void WriteFile(String path, boolean shouldAppend, ArrayList<WeatherData> weatherData) {
+        PrintWriter printWriter = null;
+        try {
+            File readFile = new File(path);
+            FileWriter fileWriter = new FileWriter(readFile, shouldAppend);
+            printWriter = new PrintWriter(fileWriter);
+            for(WeatherData data: weatherData){
+                printWriter.println(data);
+            }
+        } catch (IOException e) {
+            System.out.println("File cannot be created");
+        }
+        printWriter.close();
     }
 }

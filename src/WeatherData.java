@@ -31,8 +31,7 @@ public class WeatherData implements Comparable<WeatherData> {
      */
     public String toString()
     {
-        // remove the line below and implement your function here
-        throw new UnsupportedOperationException();
+        return city + ", " + averageTemp + ", " + averageHumidity;
     }
 
     /*
@@ -41,7 +40,52 @@ public class WeatherData implements Comparable<WeatherData> {
      */
     public int compareTo(WeatherData other)
     {
-        // remove the line below and implement your function here
-        throw new UnsupportedOperationException();
+        if(averageTemp > other.getAverageTemp()){
+            return 1;
+        }
+        if(averageTemp < other.getAverageTemp()){
+            return -1;
+        }
+        return 0;
     }
 }
+
+
+// Compare this and other such that if this.getAverageTemp is greater it would return 1 and if other.getAverageTemp is greater it would return -1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
