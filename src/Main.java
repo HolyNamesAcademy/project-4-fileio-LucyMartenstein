@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class Main {
     'append' - writes weather data to a file -- appends data to the file if it exists
     'quit' - ends the program
      */
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         ArrayList<WeatherData> weatherData = null;
         while (true)
         {
@@ -88,12 +89,24 @@ public class Main {
     If the file does not exist, the function catches the exception, prints a message
     to the console, and return an empty (not null) array.
      */
-    public static ArrayList<WeatherData> ReadFile(String path){
+    public static ArrayList<WeatherData> ReadFile(String path) throws IOException {
         File readFile = new File(path);
+        PrintWriter printWriter = null;
         System.out.println("Reading file from '" + readFile.getAbsolutePath() + "'.");
         ArrayList<WeatherData> files = new ArrayList<WeatherData>();
+
         try {
-            Scanner scn = new Scanner (readFile);
+            Scanner s = new Scanner(readFile);
+            while (s.hasNextLine()){
+                String[] parts = s.nextLine().split(",");
+                if(parts.length != 3){
+                    continue;}
+                double avg1 = Double.parseDouble(parts[1]);
+                double avg2 = Double.parseDouble(parts[2]);
+                WeatherData line = new WeatherData(parts[0], avg1, avg2);
+                files.add(line);
+            }
+            s.close();
         } catch (FileNotFoundException e) {
             System.out.println("File does not exist");
             return files;
@@ -123,15 +136,16 @@ public class Main {
      */
     public static void SortWeatherData(ArrayList<WeatherData> weatherData)
     {
-        for(int i = weatherData.size()-1; i >= 0; i--){
-            for(int hotterThan = 0; hotterThan <= weatherData.size(); hotterThan++) {
+        for(int i = 0; i < weatherData.size(); i++){
+            for(int hotterThan = 0; hotterThan < weatherData.size(); hotterThan++) {
                 double avgTemp = weatherData.get(i).getAverageTemp();
                 if (avgTemp >= weatherData.get(hotterThan).getAverageTemp()) {
-                    weatherData.add(hotterThan, weatherData.get(i));
-                    weatherData.remove(i+1);
+                    weatherData.remove(i);
+                    weatherData.add(hotterThan, weatherData.get(i-1));
                 }
             }
         }
+        System.out.println(weatherData.toString());
     }
 
     /*
